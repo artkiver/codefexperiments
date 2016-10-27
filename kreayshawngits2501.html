@@ -1,0 +1,480 @@
+
+<!DOCTYPE HTML>
+
+<!------------------------------------------------------------------------------
+
+Copyright (c) 2011 Antoine Santo Aka NoNameNo
+
+
+
+This File is part of the CODEF project.
+
+
+
+More info : http://codef.santo.fr
+
+Demo gallery http://www.wab.com
+
+
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+
+of this software and associated documentation files (the "Software"), to deal
+
+in the Software without restriction, including without limitation the rights
+
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+
+copies of the Software, and to permit persons to whom the Software is
+
+furnished to do so, subject to the following conditions:
+
+
+
+The above copyright notice and this permission notice shall be included in
+
+all copies or substantial portions of the Software.
+
+
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+
+THE SOFTWARE.
+
+// Updated 2016-10-27 based upon previous experiments from 2016-10-15 with the CODEF framework that have been iterating.
+
+// ｜
+
+// グ
+
+// レ
+
+// ェ
+
+// -grey
+
+// 
+
+
+------------------------------------------------------------------------------>
+
+
+
+<html> 
+
+<head> 
+
+
+
+<script src="http://codef.santo.fr/codef/codef_core.js"></script> 
+
+<script src="http://codef.santo.fr/codef/codef_3d.js"></script> 
+
+<script src="http://codef.santo.fr/codef/codef_starfield.js"></script> 
+
+<script src="http://codef.santo.fr/codef/codef_gradient.js"></script>
+
+<script src="http://codef.santo.fr/codef/codef_fx.js"></script> 
+
+<script src="http://codef.santo.fr/codef/codef_scrolltext.js"></script> 
+
+
+
+
+
+
+
+ 
+ 
+ 
+<script> 
+ 
+ 
+ 
+ 
+ 
+ 
+var mycanvas;
+ 
+var my3d;
+ 
+var mystarfield;
+ 
+ 
+ 
+var myobj = new Array();
+ 
+var myobjvert = new Array();
+ 
+// Codef 3D file (converted by SoLO)
+var myobj = [];
+var myobjvert = [];
+var texture00=new image('https://d2h1pu99sxkfvn.cloudfront.net/b0/2198467/271195679_9tXbhjwIgP/P7.jpg');
+var texture01=new image('http://reviktra.neocities.org/jiji001.png');
+var texture02=new image('http://reviktra.neocities.org/jiji02.png');
+var texture03=new image('http://reviktra.neocities.org/jiji003.png');
+var texture04=new image('https://d2h1pu99sxkfvn.cloudfront.net/b0/2198467/281738492_CIE5iBt0ym/P7.jpg');
+var texture05=new image('http://reviktra.neocities.org/jiji005.png');
+var texture06=new image('https://d2h1pu99sxkfvn.cloudfront.net/b0/2198467/271713261_2u4ELOzFtk/P7.jpg');
+var texture07=new image('https://d2h1pu99sxkfvn.cloudfront.net/b0/2198467/271195645_cHjmLoR4UJ/P7.jpg');
+var texture08=new image('http://reviktra.neocities.org/jiji008.png');
+var texture09=new image('https://pbs.twimg.com/profile_images/765997925872836608/EYW3yf8s.jpg');
+var texture10=new image('https://pbs.twimg.com/media/BlMQXBtIIAA27mr.jpg');
+var texture11=new image('https://scontent.fsnc1-2.fna.fbcdn.net/v/t1.0-9/14600866_10153437826152395_1708492642551368562_n.jpg?oh=a2c7da27c1fb9bb1132cf623cb39bc49&oe=58A550E6');
+var texture12=new image('http://i396.photobucket.com/albums/pp46/ansel07/japanese_flag1.jpg');
+    
+var myobjcol=0xFFFFFF;
+var wsize=1;
+ 
+myobjvert=[
+ 
+{x:-1, y:0, z:-1},
+ 
+{x: 1, y:0, z:-1},
+ 
+{x: 1, y:0, z: 1},
+ 
+{x:-1, y:0, z: 1},
+ 
+{x:0, y:-2, z: 0},
+ 
+{x:0, y: 2, z: 0},
+ 
+];
+ 
+myobj000=[ 
+{p1:1, p2:4, p3:0, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({color: 0x00aa00, opacity:0.3, map: new Texture( texture09.img ) })},
+{p1:2, p2:4, p3:1, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00, opacity:0.3, map: new Texture( texture10.img ) })},
+{p1:3, p2:4, p3:2, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({color: 0x00aa00, opacity:0.3, map: new Texture( texture11.img ) })},
+{p1:0, p2:4, p3:3, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({color: 0x00aa00, opacity:0.03, map: new Texture( texture12.img ) })},
+{p1:0, p2:5, p3:1, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture00.img ) })},
+{p1:1, p2:5, p3:2, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture01.img ) })},
+{p1:2, p2:5, p3:3, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture02.img ) })},
+{p1:3, p2:5, p3:0, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture03.img ) })},
+]
+ 
+myobj001=[ 
+{p1:1, p2:4, p3:0, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00,opacity:0.3, map: new Texture( texture09.img ) })},
+{p1:2, p2:4, p3:1, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00, opacity:0.3, map: new Texture( texture10.img ) })},
+{p1:3, p2:4, p3:2, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00,opacity:0.3, map: new Texture( texture11.img ) })},
+{p1:0, p2:4, p3:3, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00,opacity:0.03, map: new Texture( texture12.img ) })},
+{p1:0, p2:5, p3:1, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture01.img ) })},
+{p1:1, p2:5, p3:2, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture02.img ) })},
+{p1:2, p2:5, p3:3, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture03.img ) })},
+{p1:3, p2:5, p3:0, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture04.img ) })},
+];
+ 
+myobj002=[ 
+{p1:1, p2:4, p3:0, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({color: 0x00aa00, opacity:0.3, map: new Texture( texture09.img ) })},
+{p1:2, p2:4, p3:1, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00, opacity:0.3, map: new Texture( texture10.img ) })},
+{p1:3, p2:4, p3:2, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00,opacity:0.3, map: new Texture( texture11.img ) })},
+{p1:0, p2:4, p3:3, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({color: 0x00aa00, opacity:0.03, map: new Texture( texture12.img ) })},
+{p1:0, p2:5, p3:1, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture02.img ) })},
+{p1:1, p2:5, p3:2, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture03.img ) })},
+{p1:2, p2:5, p3:3, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture04.img ) })},
+{p1:3, p2:5, p3:0, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture05.img ) })},
+];
+ 
+myobj003=[ 
+{p1:1, p2:4, p3:0, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00,opacity:0.3, map: new Texture( texture09.img ) })},
+{p1:2, p2:4, p3:1, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({color: 0x00aa00,  opacity:0.3, map: new Texture( texture10.img ) })},
+{p1:3, p2:4, p3:2, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({color: 0x00aa00, opacity:0.3, map: new Texture( texture11.img ) })},
+{p1:0, p2:4, p3:3, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00,opacity:0.03, map: new Texture( texture12.img ) })},
+{p1:0, p2:5, p3:1, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture02.img ) })},
+{p1:1, p2:5, p3:2, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture03.img ) })},
+{p1:2, p2:5, p3:3, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture04.img ) })},
+{p1:3, p2:5, p3:0, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture05.img ) })},
+];
+ 
+myobj004=[ 
+{p1:1, p2:4, p3:0, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00,opacity:0.3, map: new Texture( texture09.img ) })},
+{p1:2, p2:4, p3:1, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00, opacity:0.3, map: new Texture( texture10.img ) })},
+{p1:3, p2:4, p3:2, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00,opacity:0.3, map: new Texture( texture11.img ) })},
+{p1:0, p2:4, p3:3, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00,opacity:0.03, map: new Texture( texture12.img ) })},
+{p1:0, p2:5, p3:1, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture03.img ) })},
+{p1:1, p2:5, p3:2, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture04.img ) })},
+{p1:2, p2:5, p3:3, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture05.img ) })},
+{p1:3, p2:5, p3:0, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture06.img ) })},
+];
+    
+myobj005=[ 
+{p1:1, p2:4, p3:0, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({color: 0x00aa00, opacity:0.3, map: new Texture( texture09.img ) })},
+{p1:2, p2:4, p3:1, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00, opacity:0.3, map: new Texture( texture10.img ) })},
+{p1:3, p2:4, p3:2, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00,opacity:0.3, map: new Texture( texture11.img ) })},
+{p1:0, p2:4, p3:3, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00,opacity:0.03, map: new Texture( texture12.img ) })},
+{p1:0, p2:5, p3:1, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture04.img ) })},
+{p1:1, p2:5, p3:2, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture05.img ) })},
+{p1:2, p2:5, p3:3, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture06.img ) })},
+{p1:3, p2:5, p3:0, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture07.img ) })},
+];
+    
+myobj006=[ 
+{p1:1, p2:4, p3:0, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00,opacity:0.3, map: new Texture( texture09.img ) })},
+{p1:2, p2:4, p3:1, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00, opacity:0.3, map: new Texture( texture10.img ) })},
+{p1:3, p2:4, p3:2, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00,opacity:0.3, map: new Texture( texture11.img ) })},
+{p1:0, p2:4, p3:3, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00,opacity:0.03, map: new Texture( texture12.img ) })},
+{p1:0, p2:5, p3:1, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture05.img ) })},
+{p1:1, p2:5, p3:2, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture06.img ) })},
+{p1:2, p2:5, p3:3, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture07.img ) })},
+{p1:3, p2:5, p3:0, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture08.img ) })},
+];
+ 
+myobj007=[ 
+{p1:1, p2:4, p3:0, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00,opacity:0.3, map: new Texture( texture09.img ) })},
+{p1:2, p2:4, p3:1, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00, opacity:0.3, map: new Texture( texture10.img ) })},
+{p1:3, p2:4, p3:2, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00,opacity:0.3, map: new Texture( texture11.img ) })},
+{p1:0, p2:4, p3:3, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00,opacity:0.03, map: new Texture( texture12.img ) })},
+{p1:0, p2:5, p3:1, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture06.img ) })},
+{p1:1, p2:5, p3:2, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture07.img ) })},
+{p1:2, p2:5, p3:3, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture08.img ) })},
+{p1:3, p2:5, p3:0, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture00.img ) })},
+];
+    
+myobj008=[ 
+{p1:1, p2:4, p3:0, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00,opacity:0.3, map: new Texture( texture09.img ) })},
+{p1:2, p2:4, p3:1, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00, opacity:0.3, map: new Texture( texture10.img ) })},
+{p1:3, p2:4, p3:2, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00,opacity:0.3, map: new Texture( texture11.img ) })},
+{p1:0, p2:4, p3:3, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({ color: 0x00aa00,opacity:0.03, map: new Texture( texture12.img ) })},
+{p1:0, p2:5, p3:1, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture07.img ) })},
+{p1:1, p2:5, p3:2, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture08.img ) })},
+{p1:2, p2:5, p3:3, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture00.img ) })},
+{p1:3, p2:5, p3:0, u1:1,v1:1, u2:0.5,v2:0, u3:0,v3:1 ,params:new MeshBasicMaterial({  map: new Texture( texture01.img ) })},
+];
+        
+var mygrad;
+var mygradcolor=[
+            {color: 'rgb(333,2,2)' ,  offset:.0},
+            {color: 'rgb(0,0,0)' ,  offset:0.33},
+            {color: 'rgb(0,0,0)' ,  offset:0.66},
+            {color: 'rgb(444,444,444)' ,  offset:1}
+      ];
+      
+var myfont = new image('http://reviktra.neocities.org/poryphyriafont00.png');
+var myoffscreencanvas;
+var myscrolltext;
+      
+var myfx;
+var myfxparam=[
+        {value: 0, amp: 30, inc:0.01, offset: -0.05},
+        {value: 0, amp: 0, inc:0.01, offset: -0.01}
+      ];
+      
+function init(){
+        mycanvas=new canvas(240,240,"main");
+        myoffscreencanvas=new canvas(640,32);
+        myfont.initTile(32,32,32);
+        
+        myscrolltext = new scrolltext_horizontal();
+    myscrolltext.scrtxt=" KREAYSHAWN IS CHO KAWAII AND AWESOME !!! KREAYSHAWN - BREAKFAST (SYRUP) FEATURING 2 CHAINZ"
+        myscrolltext.init(myoffscreencanvas,myfont,1);
+        
+        myfx=new FX(myoffscreencanvas,mycanvas,myfxparam);
+        
+        my3d=new codef3D(mycanvas, 22, 13, 1, 88 );
+        my3d.faces(myobjvert,myobj000, true, false );
+        my3d.faces(myobjvert,myobj001, true, false );
+        my3d.faces(myobjvert,myobj002, true, false );
+        my3d.faces(myobjvert,myobj003, true, false );
+        my3d.faces(myobjvert,myobj004, true, false );
+        my3d.faces(myobjvert,myobj005, true, false );
+        my3d.faces(myobjvert,myobj006, true, false );
+        my3d.faces(myobjvert,myobj007, true, false );
+        my3d.faces(myobjvert,myobj008, true, false );
+    
+    mystarfield=new starfield3D(mycanvas, 50, 22, 240,240, 240, 240,'#E8E8E8', 100,10,10);
+        
+        mygrad=new grad(mycanvas,mygradcolor);
+        
+        go();
+}
+      
+function go(){
+    mycanvas.clear();
+ 
+        mygrad.drawH();
+        mystarfield.draw();
+        myoffscreencanvas.clear();
+        myscrolltext.draw(0);
+        myfx.sinx(0,180);
+        my3d.group.rotation.x+=0.03;
+        my3d.group.rotation.y+=0.01;
+        my3d.group.rotation.z+=0.02;
+        my3d.draw();
+ 
+        requestAnimFrame( go );
+}
+      
+ 
+ 
+ 
+function fullscr(elemId) {
+ 
+var elem = document.getElementById(elemId);
+ 
+if (elem.requestFullscreen) {
+ 
+elem.requestFullscreen();
+ 
+} else if (elem.mozRequestFullScreen) {
+ 
+elem.mozRequestFullScreen();
+ 
+} else if (elem.webkitRequestFullScreen) {
+ 
+elem.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+ 
+}
+ 
+}
+ 
+ 
+ 
+</script>
+ 
+ 
+ 
+<style type="text/css"> 
+ 
+#main:-moz-full-screen,
+ 
+#main:-moz-full-screen canvas {
+ 
+width: 100%;
+ 
+height: 100%;
+ 
+}
+ 
+#main:-webkit-full-screen,
+ 
+#main:-webkit-full-screen canvas {
+ 
+width: 100%;
+ 
+height: 100%;
+ 
+}
+ 
+#main:fullscreen,
+ 
+#main:fullscreen canvas {
+ 
+width: 100%;
+ 
+height: 100%;
+}
+
+</style> 
+
+
+
+</head> 
+
+
+
+<center>
+
+
+
+<center>
+
+<pre>
+</center>
+
+<br>
+
+
+
+</p
+
+</center>
+
+<body onLoad="init();">
+
+<body bgcolor="#DFDFDF">
+
+<br>
+
+<center>
+
+<div id="main"></div><br>
+
+<button onclick="fullscr('main');">FULLSCREEN</button>
+
+<br>
+
+
+
+<iframe width="1" height="1" src="https://www.youtube.com/embed/XA1gt-bwgQk?autoplay=1" frameborder="0" allowfullscreen></iframe>
+
+
+<br>
+
+page and effects design by
+
+<br>
+
+｜
+
+<br>
+
+グ
+
+<br>
+
+レ
+
+<br>
+
+ェ
+
+<br>
+
+<br>
+
+</center>
+
+<center>
+
+using the <a href="http://codef.santo.fr/">CODEF</a> Javascript framework
+
+<br>
+
+<br>
+
+Derived from tutorial code by NoNameNo
+
+<br>
+
+Fullscreen mode based on code contributed by <a href="https://www.facebook.com/karl.s.cullen">Karl Cullen</a>
+
+<br>
+
+Fullscreen should work correctly on Internet Explorer, Chrome, Firefox, The Tor Browser Bundle, WebKit nightly builds
+
+<br>
+
+may need improvement for Safari. Does not appear to function on iOS Safari or Chrome. Supposedly works OK on Android Chrome.
+
+<br>
+Animated texture maps only appear to work on Chrome for the time being. Help welcome.<br>
+Fork and branch here:
+<a href="https://github.com/artkiver/codefexperiments/blob/master/kreayshawngits2501.html">https://github.com/artkiver/codefexperiments/blob/master/kreayshawngits2501.html</a><br>
+
+audio: <a href="https://www.youtube.com/watch?v=XA1gt-bwgQk">https://www.youtube.com/watch?v=XA1gt-bwgQk</a>
+
+</center>
+
+</body> 
+
+</html>
