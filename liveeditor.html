@@ -1,0 +1,387 @@
+
+<!DOCTYPE html>
+<meta charset="utf-8"/>
+<html manifest="editor.appcache">
+	<head>
+		<title>code editor</title>
+		<link rel="stylesheet" href="https://reviktra.neocities.org/codemirror.css">
+		<script src="https://reviktra.neocities.org/codemirror.js"></script>
+		<script src="https://reviktra.neocities.org/xml.js"></script>
+		<script src="https://reviktra.neocities.org/javascript.js"></script>
+		<script src="https://reviktra.neocities.org/css.js"></script>
+		<script src="https://reviktra.neocities.org/htmlmixed.js"></script>
+		<script src="https://reviktra.neocities.org/lzma.js"></script>
+		<style>
+			@font-face {
+				font-family: 'inconsolata';
+				src: url('files/inconsolata.woff') format('woff');
+				font-weight: normal;
+				font-style: normal;
+			}
+
+			body {
+				margin: 0px;
+				overflow: hidden;
+			}
+
+			.button {
+				font-family: Arial;
+				font-size: 10px;
+				text-transform: uppercase;
+				text-decoration: none;
+
+				color: rgba(0,0,0,0.5);
+				border: 1px solid rgba(0,0,0,0.25);
+				background-color: rgba(0,0,0,0);
+
+				margin: 2px;
+				padding: 8px 10px;
+
+				cursor: pointer;
+			}
+
+			.button:hover {
+				color: rgba(255,255,255,0.75);
+				background-color: rgba(0,0,0,0.75);
+			}
+
+			input {
+				cursor: pointer;
+			}
+
+			/**/
+
+			.CodeMirror {
+				font-family: inconsolata;
+				background-color: rgba(255,255,255,0.5);
+			}
+
+			.CodeMirror-scroll {
+				height: 100%;
+			}
+
+			div.CodeMirror-selected {
+				background: rgba(0,0,0,0.1);
+			}
+			.CodeMirror-focused div.CodeMirror-selected {
+				background: rgba(0,0,255,0.1);
+			}
+
+		</style>
+	</head>
+	<body>
+		<script>
+
+			window.URL = window.URL || window.webkitURL;
+
+			var interval;
+			var autoUpdate = true;
+
+			// URL
+
+			function convertHexToBytes( text ) {
+
+				var tmpHex, array = [];
+
+				for ( var i = 0; i < text.length; i += 2 ) {
+
+					tmpHex = text.substring( i, i + 2 );
+					array.push( parseInt( tmpHex, 16 ) );
+
+				}
+
+				return array;
+
+			}
+
+			function convertBytesToHex( byteArray ) {
+
+				var tmpHex, hex = "";
+
+				for ( var i = 0, il = byteArray.length; i < il; i ++ ) {
+
+					if ( byteArray[ i ] < 0 ) {
+
+						byteArray[ i ] = byteArray[ i ] + 256;
+
+					}
+
+					tmpHex = byteArray[ i ].toString( 16 );
+
+					// add leading zero
+
+					if ( tmpHex.length == 1 ) tmpHex = "0" + tmpHex;
+
+					hex += tmpHex;
+
+				}
+
+				return hex;
+
+			}
+
+			var compressor = new LZMA( "js/lzma_worker.js" );
+
+			var readURL = function ( hash ) {
+
+				var bytes = convertHexToBytes( hash );
+
+				compressor.decompress( bytes, function( text ) {
+
+					code.setValue( text );
+					updatePreview();
+
+				},
+				function () {} );
+
+			}
+
+			var writeURL = function ( text ) {
+
+				compressor.compress( text, 1, function ( bytes ) {
+
+					window.location.replace( '#A/' + convertBytesToHex( bytes ) );
+
+				},
+				function () {} );
+
+			}
+
+			// preview
+
+			var preview = document.createElement( 'div' );
+			preview.style.position = 'absolute';
+			preview.style.left = '0px';
+			preview.style.top = '0px';
+			preview.style.width = window.innerWidth + 'px';
+			preview.style.height = window.innerHeight + 'px';
+			document.body.appendChild( preview );
+
+			var updatePreview = function () {
+
+				while ( preview.children.length > 0 ) {
+
+					preview.removeChild( preview.firstChild );
+
+				}
+
+				var iframe = document.createElement( 'iframe' );
+				iframe.style.width = '100%';
+				iframe.style.height = '100%';
+				iframe.style.border = '0';
+				preview.appendChild( iframe );
+
+				var content = iframe.contentDocument || iframe.contentWindow.document;
+
+				content.open();
+				content.write( code.getValue() );
+				content.close();
+
+				buttonSave.style.display = '';
+				buttonDownload.style.display = 'none';
+
+			}
+
+			setTimeout( updatePreview, 300 );
+
+			// editor
+
+			var code = CodeMirror( document.body, {
+
+				mode: "text/html",
+				lineNumbers: true,
+				matchBrackets: true,
+				indentWithTabs: true,
+				tabSize: 4,
+				indentUnit: 4,
+
+				onChange: function () {
+
+					if ( autoUpdate === false ) return;
+
+					clearTimeout( interval );
+					interval = setTimeout( updatePreview, 300 );
+
+				}
+
+			} );
+
+			var codeElement = code.getWrapperElement();
+			codeElement.style.position = 'absolute';
+			codeElement.style.width = window.innerWidth + 'px';
+			codeElement.style.height = window.innerHeight + 'px';
+			document.body.appendChild( codeElement );
+
+			// toolbar
+
+			var pad = function ( number, length ) {
+
+				var string = number.toString();
+
+				while ( string.length < length ) string = '0' + string;
+				return string;
+
+			}
+
+			var toolbar = document.createElement( 'div' );
+			toolbar.style.position = 'absolute';
+			toolbar.style.right = '15px';
+			toolbar.style.top = '15px';
+			document.body.appendChild( toolbar );
+
+			var buttonUpdate = document.createElement( 'button' );
+			buttonUpdate.className = 'button';
+
+			var checkbox = document.createElement( 'input' );
+			checkbox.type = 'checkbox';
+			checkbox.checked = true;
+			checkbox.style.margin = '-4px 4px -4px 0px';
+			checkbox.addEventListener( 'click', function ( event ) {
+
+				event.stopPropagation();
+
+				autoUpdate = autoUpdate === false;
+
+			}, false );
+			buttonUpdate.appendChild( checkbox );
+			buttonUpdate.appendChild( document.createTextNode( 'アップデート 「update」' ) );
+
+			buttonUpdate.addEventListener( 'click', function ( event ) {
+
+				updatePreview();
+
+			}, false );
+			toolbar.appendChild( buttonUpdate );
+
+			var buttonIO = document.createElement( 'span' );
+			toolbar.appendChild( buttonIO );
+
+			var buttonSave = document.createElement( 'button' );
+			buttonSave.className = 'button';
+			buttonSave.textContent = 'セーブ 「save」';
+			buttonSave.addEventListener( 'click', function ( event ) {
+
+				localStorage.code = code.getValue();
+
+				var blob = new Blob( [ code.getValue() ], { type: 'text/plain' } );
+				var objectURL = URL.createObjectURL( blob );
+
+				buttonDownload.href = objectURL;
+
+				var date = new Date();
+				buttonDownload.download = 'Sketch ' + date.getFullYear() + '-' + pad( date.getMonth() + 1, 2 ) + '-' + pad( date.getDate(), 2 ) + ' ' + pad( date.getHours(), 2 ) + '.' + pad( date.getMinutes(), 2 ) + '.' + pad( date.getSeconds(), 2 ) + '.html';
+
+				buttonSave.style.display = 'none';
+				buttonDownload.style.display = '';
+
+			}, false );
+			buttonIO.appendChild( buttonSave );
+
+			var buttonDownload = document.createElement( 'a' );
+			buttonDownload.className = 'button';
+			buttonDownload.style.display = 'none';
+			buttonDownload.download = 'index.html';
+			buttonDownload.textContent = 'download';
+			buttonIO.appendChild( buttonDownload );
+
+			var buttonShare = document.createElement( 'button' );
+			buttonShare.className = 'button';
+			buttonShare.textContent = '分ける 「share」';
+			buttonShare.addEventListener( 'click', function ( event ) {
+
+				writeURL( code.getValue() );
+
+			}, false );
+			buttonIO.appendChild( buttonShare );
+
+			var curs = document.createElement( 'input' );
+			curs.type="range";
+			curs.min="0";
+			curs.max="100";
+			curs.value="50";
+			curs.addEventListener( 'change', function ( event ) {
+				codeElement.style.backgroundColor="rgba(255,255,255,"+this.value/100+")";
+			}, false );
+			buttonIO.appendChild( curs );
+
+			var buttonHide = document.createElement( 'button' );
+			buttonHide.className = 'button';
+			buttonHide.textContent = 'エディターを隠す「hide editor」';
+			buttonHide.addEventListener( 'click', function ( event ) {
+
+				if ( codeElement.style.display === '' ) {
+
+					this.textContent = 'show editor';
+
+					codeElement.style.display = 'none';
+					buttonUpdate.style.display = 'none';
+					buttonIO.style.display = 'none';
+					buttonShare.display = 'none';
+
+				} else {
+
+					this.textContent = 'hide editor';
+
+					codeElement.style.display = '';
+					buttonUpdate.style.display = '';
+					buttonIO.style.display = '';
+					buttonShare.display = '';
+
+				}
+
+			}, false );
+			toolbar.appendChild( buttonHide );
+
+			// events
+
+			document.addEventListener( 'drop', function ( event ) {
+
+				event.preventDefault();
+				event.stopPropagation();
+
+				var reader = new FileReader();
+
+				reader.onload = function ( event ) {
+
+					code.setValue( event.target.result );
+
+				};
+
+				reader.readAsText( event.dataTransfer.files[ 0 ] );
+
+			}, false );
+
+			window.addEventListener( 'resize', function ( event ) {
+
+				codeElement.style.width = window.innerWidth + 'px';
+				codeElement.style.height = window.innerHeight + 'px';
+
+				preview.style.width = window.innerWidth + 'px';
+				preview.style.height = window.innerHeight + 'px';
+
+			} );
+
+			//
+
+			if ( window.location.hash ) {
+
+				var hash = window.location.hash.substr( 1 );
+				var version = hash.substr( 0, 2 );
+
+				if ( version == 'A/' ) readURL( hash.substr( 2 ) );
+
+			} else if ( localStorage.code ) {
+
+				code.setValue( localStorage.code );
+				updatePreview();
+
+			} else {
+
+				readURL( '5d000001009101000000000000001e084506d0efa8281759d999e2807bb2bf93f25494f7809a198bc9d76d421c5e142280be857796e613e4369a304162875fb818e3a0c6b02f386026e3817f0d0e71b185a504109fb3d53e9f7a984846b21b990ea1fa6fcd0d0a3051071e133e87590a06af9f31bdd81c505db55971dff124d2074f49713b3bf2bc654ff163970bce645090e08a4f0c7afe2992b873b24a9a15a57e4eafc083b16b1330992da3c1d3abe278a59166779d0ac2e56ec67adc5f6e8293a4b5ab94bb0f81cf7335b6f15676d76eaab31698be67861cb387de26244177bdefbcdb2e63b4b8cc97459e7976b3d51d2cf05d7fd025ba323c7818966369a4e8cdeb42917e60c3624ee2cfcbfff38a8b30' );
+
+			}
+
+		</script>
+	</body>
+</html>
+
