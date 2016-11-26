@@ -285,16 +285,6 @@
 			buttonDownload.textContent = 'ダウンロード 「download」';
 			buttonIO.appendChild( buttonDownload );
 
-			var buttonShare = document.createElement( 'button' );
-			buttonShare.className = 'button';
-			buttonShare.textContent = '分ける 「share」';
-			buttonShare.addEventListener( 'click', function ( event ) {
-
-				writeURL( code.getValue() );
-
-			}, false );
-			buttonIO.appendChild( buttonShare );
-
 			var curs = document.createElement( 'input' );
 			curs.type="range";
 			curs.min="0";
@@ -317,7 +307,6 @@
 					codeElement.style.display = 'none';
 					buttonUpdate.style.display = 'none';
 					buttonIO.style.display = 'none';
-					buttonShare.display = 'none';
 
 				} else {
 
@@ -326,7 +315,6 @@
 					codeElement.style.display = '';
 					buttonUpdate.style.display = '';
 					buttonIO.style.display = '';
-					buttonShare.display = '';
 
 				}
 
