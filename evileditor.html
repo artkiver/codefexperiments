@@ -285,16 +285,6 @@
 			buttonDownload.textContent = 'ダウンロード 「download」';
 			buttonIO.appendChild( buttonDownload );
 
-			var buttonShare = document.createElement( 'button' );
-			buttonShare.className = 'button';
-			buttonShare.textContent = '分ける 「share」';
-			buttonShare.addEventListener( 'click', function ( event ) {
-
-				writeURL( code.getValue() );
-
-			}, false );
-			buttonIO.appendChild( buttonShare );
-
 			var curs = document.createElement( 'input' );
 			curs.type="range";
 			curs.min="0";
@@ -317,7 +307,6 @@
 					codeElement.style.display = 'none';
 					buttonUpdate.style.display = 'none';
 					buttonIO.style.display = 'none';
-					buttonShare.display = 'none';
 
 				} else {
 
@@ -376,13 +365,10 @@
 				code.setValue( localStorage.code );
 				updatePreview();
 
-			} else {
-
-				readURL( '5d000001009101000000000000001e084506d0efa8281759d999e2807bb2bf93f25494f7809a198bc9d76d421c5e142280be857796e613e4369a304162875fb818e3a0c6b02f386026e3817f0d0e71b185a504109fb3d53e9f7a984846b21b990ea1fa6fcd0d0a3051071e133e87590a06af9f31bdd81c505db55971dff124d2074f49713b3bf2bc654ff163970bce645090e08a4f0c7afe2992b873b24a9a15a57e4eafc083b16b1330992da3c1d3abe278a59166779d0ac2e56ec67adc5f6e8293a4b5ab94bb0f81cf7335b6f15676d76eaab31698be67861cb387de26244177bdefbcdb2e63b4b8cc97459e7976b3d51d2cf05d7fd025ba323c7818966369a4e8cdeb42917e60c3624ee2cfcbfff38a8b30' );
-
 			}
 
 		</script>
 	</body>
 </html>
+
 
